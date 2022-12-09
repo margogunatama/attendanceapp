@@ -32,7 +32,18 @@
 </div>
 <!-- /#wrapper -->
 <!-- jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.js" charset="UTF-8"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.js" charset="UTF-8"></script>
 
+<script src="/javascripts/sidebar_menu.js"></script>
+<script>
+
+    $(document).ready(function () {
+        for (i = new Date().getFullYear(); i > 1900; i--) {
+            $('#year').append($('<option />').val(i).html(i));
+        }
+    });
+</script>
 <script>
     // $(document).ready(function () {
     //     for (i = new Date().getFullYear(); i > 1900; i--) {
@@ -64,18 +75,16 @@
    const menit = document.getElementById("menit").innerHTML; 
    const detik = document.getElementById("detik").innerHTML;
    const Waktu = jam+':'+menit+':'+detik;
-   if(jam < 17){
+   if(jam < 8){
     alert('Belum Waktu Pulang');
-   }else{
-    document.getElementById('waktupulang').value=Waktu;
-   formabsen.submit()
-
-   }
-   
+   } else{
+   document.getElementById('waktupulang').value=Waktu;
+   formabsen.submit()}
    
   } 
 
 </script>
+
 </body>
 <div id="myModal2" class="modal fade" role="dialog">
     <div class="modal-dialog">
@@ -108,12 +117,17 @@
                     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                     <input type="hidden" id="waktumasuk" name="waktumasuk" />
                     <input type="hidden" id="waktupulang" name="waktupulang" value="0"/>
-                    <% if(present){ %>
+                    <% if(present==true){ %>
                     <button type="button"  onclick="absenmasuk()" class="btn btn-success punch-btn" disabled>Absen Masuk</button>
                     <% } else { %>
                         <button type="button"  onclick="absenmasuk()" class="btn btn-success punch-btn">Absen Masuk</button>
                     <% } %> 
-                    <button type="button" onclick="absenkeluar()" class="btn btn-danger punch-btn">Absen Pulang</button>
+                    <% if(present==true && isPulang == false){ %>
+                        <button type="button"  onclick="absenkeluar()" class="btn btn-danger punch-btn" >Absen Pulang</button>
+                        <% } else { %>
+                            <button type="button"  onclick="absenkeluar()" class="btn btn-danger punch-btn" disabled>Absen Pulang</button>
+                        <% } %> 
+                    
                 </div>
 
             </div>

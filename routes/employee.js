@@ -17,12 +17,20 @@ router.use('/', isLoggedIn, function checkAuthentication(req, res, next) {
 
 
 router.get('/', function viewHome(req, res, next) {
+    Attendance.findOne({
+        employeeID: req.session.user._id,
+        month: new Date().getMonth()+ 1,
+        date: new Date().getDate(),
+        year: new Date().getFullYear(),
+    }).exec(function getAttendance(err, docs){
     res.render('Employee/employeeHome', {
         title: 'Home',
         userName: req.session.user.name,
         csrfToken: req.csrfToken(),
         moment: moment,
-        present: false
+        present: docs ? docs.present : false,
+        isPulang: docs ? docs.waktupulang : false
+    })
     });
 });
 
@@ -72,37 +80,47 @@ router.get('/applied-leaves', function viewAppliedLeaves(req, res, next) {
     });
 
 });
-
-
-
 router.post('/view-attendance', function viewAttendanceSheet(req, res, next) {
     var attendanceChunks = [];
-
     Attendance.find({
         employeeID: req.session.user._id,
-        month: new Date().getMonth() + 1,
-        year: new Date().getFullYear()
-    }).sort({_id: -1}).exec(function getAttendanceSheet(err, docs) {
+        month: req.body.month,
+        year: req.body.year
+    }).sort({_id: -1}).exec(function getAttendance(err, docs) {
         var found = 0;
         if (docs.length > 0) {
             found = 1;
         }
+
         for (var i = 0; i < docs.length; i++) {
             attendanceChunks.push(docs[i]);
         }
-        res.render('Employee/viewAttendance', {
-            title: 'Attendance Sheet',
-            month: new Date().getMonth() + 1,
-            csrfToken: req.csrfToken(),
-            found: found,
-            attendance: attendanceChunks,
-            moment: moment,
-            userName: req.session.user.name
-        });
+        Attendance.findOne({
+            employeeID: req.session.user._id,
+            month: new Date().getMonth()+ 1,
+            date: new Date().getDate(),
+            year: new Date().getFullYear(),
+        }).exec(function getAttendance(err, docs){
+            res.render('Employee/viewAttendance', {
+                title: 'Attendance Sheet',
+                month: req.body.month,
+                csrfToken: req.csrfToken(),
+                found: found,
+                attendance: attendanceChunks,
+                moment: moment,
+                present: docs ? docs.present : false,
+                isPulang: docs ? docs.waktupulang : false,
+                userName: req.session.user.name
+            });
+        })
     });
 
 
 });
+
+
+
+
 
 
 router.get('/view-attendance-current', function viewCurrentlyMarkedAttendance(req, res, next) {
@@ -119,16 +137,25 @@ router.get('/view-attendance-current', function viewCurrentlyMarkedAttendance(re
         }
         for (var i = 0; i < docs.length; i++) {
             attendanceChunks.push(docs[i]);
-        }
-        res.render('Employee/viewAttendance', {
-            title: 'Attendance Sheet',
-            month: new Date().getMonth() + 1,
-            csrfToken: req.csrfToken(),
-            found: found,
-            attendance: attendanceChunks,
-            moment: moment,
-            userName: req.session.user.name
-        });
+        } 
+        Attendance.findOne({
+            employeeID: req.session.user._id,
+            month: new Date().getMonth()+ 1,
+            date: new Date().getDate(),
+            year: new Date().getFullYear(),
+        }).exec(function getAttendance(err, docs){
+            res.render('Employee/viewAttendance', {
+                title: 'Attendance Sheet',
+                month: req.body.month,
+                csrfToken: req.csrfToken(),
+                found: found,
+                attendance: attendanceChunks,
+                moment: moment,
+                present: docs ? docs.present : false,
+                isPulang: docs ? docs.waktupulang : false,
+                userName: req.session.user.name
+            });
+        })
     });
 });
 
@@ -182,15 +209,21 @@ router.post('/mark-employee-attendance',async function markEmployeeAttendance(re
     }, {waktupulang:req.body.waktupulang})
 
     if(!attendance){
-
+            var jam = req.body.waktumasuk.substring(0, 2)
+            if(jam > 8){
+                keterangan = "Terlambat"
+            } else if(jam <= 8){
+                keterangan = "Tepat Waktu"
+            } 
             var newAttendance = new Attendance();
             newAttendance.employeeID = req.user._id;
             newAttendance.year = new Date().getFullYear();
             newAttendance.month = new Date().getMonth() + 1;
             newAttendance.date = new Date().getDate();
             newAttendance.present = 1;
-            newAttendance.waktumasuk = req.body.waktumasuk
-            newAttendance.waktupulang = 0
+            newAttendance.waktumasuk = req.body.waktumasuk;
+            newAttendance.waktupulang = 0;
+            newAttendance.keterangan = keterangan;
             newAttendance.save(function saveAttendance(err) {
                 if (err) {
                     console.log(err);
@@ -201,6 +234,7 @@ router.post('/mark-employee-attendance',async function markEmployeeAttendance(re
         res.redirect('/employee/view-attendance-current');
 
     });
+
 module.exports = router;
 
 

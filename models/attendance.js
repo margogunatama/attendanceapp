@@ -10,6 +10,7 @@ var AttendanceSchema = new Schema({
     waktumasuk: {type: String, required:true},
     waktupulang: {type: String, required:true},
     present: {type: Boolean, required: true},
+    keterangan: {type: String},
 });
 
 
