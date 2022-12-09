@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
+
 //var UserSalary = require('../models/user_salary');
 //var PaySlip = require('../models/payslip');
 var Leave = require('../models/leave');
@@ -82,7 +83,9 @@ router.get('/leave-applications', function getLeaveApplications(req, res, next) 
                 csrfToken: req.csrfToken(),
                 hasLeave: hasLeave,
                 leaves: leaveChunks,
-                employees: employeeChunks, moment: moment, userName: req.session.user.name
+                employees: employeeChunks, 
+                moment: moment, 
+                userName: req.session.user.name
             });
         }
     });
