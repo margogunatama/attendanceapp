@@ -7,8 +7,7 @@ var csrfProtection = csrf();
 var nodemailer = require('nodemailer');
 var bcrypt = require('bcrypt-nodejs');
 router.use(csrfProtection);
-
-
+require('dotenv').config();
 
 router.get('/forgotpass', function signUp(req, res, next) {
 
@@ -143,13 +142,13 @@ const sendEmail = async (email, newPassword, res) => {
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-                user: 'mgunatama@student.telkomuniversity.ac.id',
-                pass: 'ljjqyxakdxvgdhpv'
+                user: process.env.MAILER_USER,
+                pass: process.env.MAILER_PASSWORD
             }
         });
 
         await transporter.sendMail({
-            from: 'mgunatama@student.telkomuniversity.ac.id',
+            from: process.env.MAILER_USER,
             to: email,
             subject: 'Password Reset',
             text: `Your new password is ${newPassword}. You can use this password to log in to your account.`

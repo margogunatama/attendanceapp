@@ -2,6 +2,8 @@ var passport = require('passport');
 var User = require('../models/user');
 var LocalStrategy = require('passport-local').Strategy;
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+require('dotenv').config();
+
 
 passport.serializeUser(function (user, done) {
     done(null, user.id);
@@ -96,10 +98,10 @@ passport.use('local.signin', new LocalStrategy({
     });
 }));
 
-passport.use('google',new GoogleStrategy({
-    clientID:"1023439771246-rdsfb2n5657vi1c662ssctbc7jn3ic1l.apps.googleusercontent.com",
-    clientSecret:"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",
-    callbackURL: "http://localhost:3000/google/callback",
+passport.use("google", new GoogleStrategy({
+    clientID: process.env.GOOGLE_ID,
+    clientSecret:process.env.GOOGLE_SECRET,
+    callbackURL: process.env.GOOGLE_CALLBACK,
     passReqToCallback   : true
 },
 function(request, accessToken, refreshToken, profile, done) {
