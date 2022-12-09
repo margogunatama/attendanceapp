@@ -1,0 +1,37 @@
+<div id="sidebar-wrapper">
+    <ul class="sidebar-nav nav-pills nav-stacked" id="menu">
+
+        <li>
+            <a href="/manager/view-employees">
+                <button type="submit" style="background: transparent; border: transparent;"><i
+                            class="fa fa-users fa-lg " aria-hidden="true"></i> Daftar User
+                </button>
+            </a>
+        </li>
+        <li class="active">
+            <a href="/manager/leave-applications"><span class="fa-stack fa-lg pull-left"><i
+                            class="fa fa-envelope-square fa-stack-1x "></i></span> Approval Lembur</a></li>
+        <li data-toggle="modal" data-target="#myModal">
+            <a href="#"> <span class="fa-stack fa-lg pull-left"><i class="fa fa-list-ol fa-stack-1x "></i></span>Rekap Kehadiran</a>
+        </li>
+        <li data-toggle="modal" data-target="#myModal2">
+            <a href="#"><span class="fa-stack fa-lg pull-left"><i
+                            class="fa fa-check-circle fa-stack-1x "></i></span>Submit Kehadiran</a>
+        </li>
+        <li>
+            <a href="/manager/view-profile"><span class="fa-stack fa-lg pull-left"><i
+                            class="fa fa-user fa-stack-1x "></i></span>View Profile</a>
+        </li>
+    </ul>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.js" charset="UTF-8"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.js" charset="UTF-8"></script>
+<script src="/javascripts/sidebar_menu.js"></script>
+<script>
+
+    $(document).ready(function () {
+        for (i = new Date().getFullYear(); i > 1900; i--) {
+            $('#year').append($('<option />').val(i).html(i));
+        }
+    });
+</script>

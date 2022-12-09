@@ -1,0 +1,47 @@
+<div id="sidebar-wrapper">
+    <ul class="sidebar-nav nav-pills nav-stacked" id="menu">
+        <li>
+            <a href="/admin/settingparam"><span class="fa-stack fa-lg pull-left"><i
+                            class="fa fa-dashboard fa-stack-1x "></i></span>Setting Parameter</a>
+        </li>
+        
+        <li>
+            <a href="#" id="menu3"><span class="fa-stack fa-lg pull-left"><i
+                            class="fa fa-users fa-stack-1x "></i></span> Users</a>
+            <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                <li><a href="/admin/view-all-employees"><span class="fa-stack fa-lg pull-left"><i
+                                    class="fa fa-eye fa-stack-1x "></i></span>Daftar User</a></li>
+                <li><a href="/admin/add-employee"><span class="fa-stack fa-lg pull-left"><i
+                                    class="fa fa-plus fa-stack-1x "></i></span>Tambah User</a></li>
+            </ul>
+        </li>
+        
+        <li data-toggle="modal" data-target="#myModal">
+            <a href="#"> <span class="fa-stack fa-lg pull-left"><i class="fa fa-list-ol fa-stack-1x "></i></span>Rekap Kehadiran</a>
+        </li>
+        <li data-toggle="modal" data-target="#myModal2">
+            <a href="#"><span class="fa-stack fa-lg pull-left"><i
+                            class="fa fa-check-circle fa-stack-1x "></i></span>Submit Kehadiran</a>
+        </li>
+        <li>
+            <a href="/admin/view-profile"><span class="fa-stack fa-lg pull-left"><i
+                            class="fa fa-user fa-stack-1x "></i></span>View Profile</a>
+        </li>
+    </ul>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.js" charset="UTF-8"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.js" charset="UTF-8"></script>
+<script src="/javascripts/sidebar_menu.js"></script>
+<script>
+
+    $(document).ready(function () {
+       
+        $('li').each(function(){
+    if(window.location.href.indexOf($(this).find('a:first').attr('href'))>-1)
+    {
+    $(this).addClass('active').siblings().removeClass('active');
+    }
+});
+    });
+</script>

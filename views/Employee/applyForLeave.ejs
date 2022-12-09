@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Attendance App |<%= title %></title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.css"/>
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/stylesheets/simple-sidebar.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
+
+
+</head>
+<body>
+    <%- include('navbar.ejs') %>
+<div id="wrapper">
+    <!-- Sidebar -->
+    <%- include('menu.ejs') %><!-- /#sidebar-wrapper -->
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+        <div class="container-fluid xyz">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1>Pengajuan Lembur</h1>
+                    <div id="menu1" style="overflow: auto;">
+                        <form class="form-group-sm" action="/employee/apply-for-leave" method="post" id="form1">
+                            <div class="form-group">
+                                <label for="title">Tujuan Lembur:</label>
+                                <input type="text" class="form-control" required="required" id="tujuanlembur" name="tujuanlembur" placeholder="tujuan pelaksanaan lembur">
+                            </div>
+                          
+                            <div class="form-group">
+                                <label for="start_date">Jam Mulai Lembur:</label>
+                                <input type="time" class="form-control" required="required" id="jammulailembur" name="jammulailembur">
+                                
+                            </div>
+                            <div class="form-group">
+                                <label for="start_date">Jam Selesai Lembur:</label>
+                                <input type="time" class="form-control" required="required" id="jamselesailembur" name="jamselesailembur">
+                            </div>
+                            <div class="form-group">
+                                <label for="tipehari">Tipe Hari Lembur:</label>
+                                                             
+                                <select class="form-control" id="tipehari" name="tipehari">
+                                    <option disabled selected>--Pilih Tipe Hari Lembur--</option>
+                                    <option value="Hari Kerja">Hari Kerja</option>
+                                    <option value="Hari Libur">Hari Libur</option>
+                                    
+                                </select>
+                               
+                            </div>
+                          
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                            <button type="button" onclick="history.go(-1);" class="btn btn-default">Cancel</button>
+                            <button type="submit" data-toggle="modal" data-target="#myModal1" class="btn btn-default">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /#page-content-wrapper -->
+
+</div>
+<!-- /#wrapper -->
+<!-- jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.js" charset="UTF-8"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.js" charset="UTF-8"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#form1').on('submit', function () {
+            var startDate = new Date($('#start_date').val());
+            var endDate = new Date($('#end_date').val());
+            if (startDate > endDate) {
+                $('#error').text("    Start Date must be smaller than End Date!")
+                return false;
+            }
+            return true;
+        });
+        $('#period').bind('keypress', function (e) {
+            if (e.which < 48 ||
+                (e.which > 57 && e.which < 65) ||
+                (e.which > 90 && e.which < 97) ||
+                e.which > 122) {
+                e.preventDefault();
+            }
+
+        });
+    });
+</script>
+
+<script src="/javascripts/sidebar_menu.js"></script>
+<script>
+
+    $(document).ready(function () {
+        for (i = new Date().getFullYear(); i > 1900; i--) {
+            $('#year').append($('<option />').val(i).html(i));
+        }
+    });
+</script>
+</body>
+<div id="myModal2" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <form method="post" action="/employee/mark-employee-attendance">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Mark Attendance</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to mark attendance.</p>
+                </div>
+                <div class="modal-footer">
+
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <button type="reset" class="btn btn-default" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-default">Yes</button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <form method="post" action="/employee/view-attendance">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Select Month/Year</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="Month">Month:</label>
+                        <select class="form-control" id="month" name="month">
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="year">Year:</label>
+                        <select class="form-control" id="year" name="year">
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <button type="reset" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-default">View</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+</html>

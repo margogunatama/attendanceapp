@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Attendance App|<%= title %></title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.css"/>
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/stylesheets/simple-sidebar.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
+    <link rel='stylesheet' href='/stylesheets/style2.css'/>
+
+
+</head>
+<body>
+    <%- include('navbar.ejs') %>
+<div id="wrapper">
+    <!-- Sidebar -->
+    <%- include('menu.ejs') %><!-- /#sidebar-wrapper -->
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+        <div class="container-fluid xyz">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1>Welcome, <%= userName %> !</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /#page-content-wrapper -->
+
+</div>
+<!-- /#wrapper -->
+<!-- jQuery -->
+
+<script>
+    // $(document).ready(function () {
+    //     for (i = new Date().getFullYear(); i > 1900; i--) {
+    //         $('#year').append($('<option />').val(i).html(i));
+    //     }
+    // });
+    window.setTimeout("waktu()",1000); 
+    function waktu() { 
+    var tanggal = new Date(); 
+    setTimeout("waktu()",1000); 
+    document.getElementById("jam").innerHTML = tanggal.getHours(); 
+    document.getElementById("menit").innerHTML = tanggal.getMinutes();
+    document.getElementById("detik").innerHTML = tanggal.getSeconds();
+  } 
+
+  function absenmasuk() { 
+    const formabsen = document.getElementById('formabsen');
+    const jam = document.getElementById("jam").innerHTML; 
+   const menit = document.getElementById("menit").innerHTML; 
+   const detik = document.getElementById("detik").innerHTML;
+   const Waktu = jam+':'+menit+':'+detik;
+   document.getElementById('waktumasuk').value = Waktu;
+   formabsen.submit();
+  } 
+
+  function absenkeluar() { 
+    const formabsen = document.getElementById('formabsen')
+    const jam = document.getElementById("jam").innerHTML; 
+   const menit = document.getElementById("menit").innerHTML; 
+   const detik = document.getElementById("detik").innerHTML;
+   const Waktu = jam+':'+menit+':'+detik;
+   if(jam < 17){
+    alert('Belum Waktu Pulang');
+   }else{
+    document.getElementById('waktupulang').value=Waktu;
+   formabsen.submit()
+
+   }
+   
+   
+  } 
+
+</script>
+</body>
+<div id="myModal2" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <form id="formabsen" method="post" action="/employee/mark-employee-attendance">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title"><%= userName %></h4>
+                    <p><%= moment().format('MMMM Do YYYY'); %></p>
+                </div>
+                <div class="modal-body">
+                    <div class="punch-info">
+                        <div id="jam-digital">
+                            <div id="hours">
+                              <p id="jam"></p>
+                            </div>
+                            <div id="minute">
+                              <p id="menit"></p>
+                            </div>
+                            <div id="second">
+                              <p id="detik"></p>
+                            </div>
+                        </div>
+                    </div>    
+                </div>
+                
+                <div class="modal-footer">
+
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <input type="hidden" id="waktumasuk" name="waktumasuk" />
+                    <input type="hidden" id="waktupulang" name="waktupulang" value="0"/>
+                    <% if(present){ %>
+                    <button type="button"  onclick="absenmasuk()" class="btn btn-success punch-btn" disabled>Absen Masuk</button>
+                    <% } else { %>
+                        <button type="button"  onclick="absenmasuk()" class="btn btn-success punch-btn">Absen Masuk</button>
+                    <% } %> 
+                    <button type="button" onclick="absenkeluar()" class="btn btn-danger punch-btn">Absen Pulang</button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <form method="post" action="/employee/view-attendance">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Select Month/Year</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="Month">Month:</label>
+                        <select class="form-control" id="month" name="month">
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="year">Year:</label>
+                        <select class="form-control" id="year" name="year">
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <button type="reset" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-default">View</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+</html>
