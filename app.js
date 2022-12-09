@@ -9,6 +9,7 @@ var session= require('express-session');
 var passport= require('passport');
 var flash= require('connect-flash');
 var MongoStore= require('connect-mongo')(session);
+require('dotenv').config();
 
 var index = require('./routes/index');
 //var users = require('./routes/users');
@@ -20,7 +21,7 @@ expressValidator = require('express-validator');
 
 mongoose.Promise = global.Promise;
 // mongoose.connect('mongodb://localhost:27017/HRMS');
-var mongoDB = "mongodb://localhost:27017/HRMS";
+var mongoDB = process.env.MONGO_URI;
 
 mongoose.connect(mongoDB, {
     useNewUrlParser: true,

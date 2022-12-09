@@ -3,7 +3,7 @@ var bcrypt=require('bcrypt-nodejs');
 var mongoose= require('mongoose');
 mongoose.Promise = global.Promise;
 //mongoose.connect('localhost:27017/HRMS');
-var mongoDB = "mongodb://localhost:27017/HRMS";
+var mongoDB = process.env.MONGO_URI;
 mongoose.connect(mongoDB, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
